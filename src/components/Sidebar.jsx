@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { SignOutButton } from '@clerk/clerk-react';
 import { 
-  HomeIcon, 
-  UserIcon, 
-  CogIcon, 
-  DocumentTextIcon, 
-  LogoutIcon 
-} from '@heroicons/react/outline';
+  Home, 
+  User, 
+  Settings, 
+  FileText, 
+  LogOut 
+} from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -15,25 +15,25 @@ const Sidebar = () => {
     { 
       name: 'Dashboard', 
       path: '/dashboard', 
-      icon: HomeIcon,
+      icon: Home,
       roles: ['athlete', 'admin']
     },
     { 
       name: 'Profile', 
       path: '/profile', 
-      icon: UserIcon,
+      icon: User,
       roles: ['athlete', 'admin']
     },
     { 
       name: 'Admin Controls', 
       path: '/admin', 
-      icon: CogIcon,
+      icon: Settings,
       roles: ['admin']
     },
     { 
       name: 'Reports', 
       path: '/reports', 
-      icon: DocumentTextIcon,
+      icon: FileText,
       roles: ['admin']
     }
   ];
@@ -89,7 +89,7 @@ const Sidebar = () => {
           <div className="py-4 border-t border-gray-200">
             <SignOutButton>
               <button className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
-                <LogoutIcon className="w-5 h-5 mr-3" />
+                <LogOut className="w-5 h-5 mr-3" />
                 Sign Out
               </button>
             </SignOutButton>
