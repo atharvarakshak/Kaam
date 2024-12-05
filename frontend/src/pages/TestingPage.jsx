@@ -1,15 +1,9 @@
 'use client';
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from './components/ui/button';
-import { Input } from './components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Label } from './components/ui/label';
-import { AlertCircle } from 'lucide-react';
+import Sidebar from '../components/Sidebar'; 
 
 const schema = z.object({
   rank: z.number().positive('Rank must be a positive number'),
@@ -76,53 +70,104 @@ function PerformanceForm() {
   ];
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">Performance Form</CardTitle>
-        <CardDescription className="text-center">Enter athlete performance details</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {formFields.map((field) => (
-              <div key={field.name} className="space-y-2">
-                <Label htmlFor={field.name}>{field.label}</Label>
-                {field.type === 'select' ? (
-                  <Select {...register(field.name)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={`Select ${field.label}`} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {field.options?.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    id={field.name}
-                    type={field.type}
-                    {...register(field.name)}
-                    className={errors[field.name] ? 'border-red-500' : ''}
-                  />
-                )}
-                {errors[field.name] && (
-                  <p className="text-red-500 text-sm flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors[field.name]?.message}
-                  </p>
-                )}
-              </div>
-            ))}
+    <div className="flex">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-grow bg-gray-50 min-h-screen">
+        <div className="container mx-auto px-4 py-8">
+          <div className="w-full max-w-4xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden">
+            <div className="bg-blue-600 p-6 text-center">
+              <h1 className="text-3xl font-extrabold text-white tracking-tight">
+                Athlete Performance Form
+              </h1>
+              <p className="mt-2 text-blue-100">
+                Comprehensive Performance Tracking
+              </p>
+            </div>
+
+            <div className="p-8 space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {formFields.map((field) => (
+                    <div key={field.name} className="group">
+                      <label 
+                        htmlFor={field.name} 
+                        className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-blue-600 transition-colors"
+                      >
+                        {field.label}
+                      </label>
+                      {field.type === 'select' ? (
+                        <select
+                          id={field.name}
+                          {...register(field.name)}
+                          className={`w-full px-4 py-2.5 rounded-lg border-2 transition-all duration-300 ease-in-out focus:ring-2 focus:outline-none
+                            ${errors[field.name] 
+                              ? 'border-red-400 focus:ring-red-200 bg-red-50' 
+                              : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200 hover:border-blue-400'
+                            }`}
+                        >
+                          <option value="">Select {field.label}</option>
+                          {field.options?.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          id={field.name}
+                          type={field.type}
+                          {...register(field.name)}
+                          className={`w-full px-4 py-2.5 rounded-lg border-2 transition-all duration-300 ease-in-out focus:ring-2 focus:outline-none
+                            ${errors[field.name] 
+                              ? 'border-red-400 focus:ring-red-200 bg-red-50' 
+                              : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200 hover:border-blue-400'
+                            }`}
+                        />
+                      )}
+                      {errors[field.name] && (
+                        <div className="mt-2 flex items-center text-red-600 text-sm space-x-2 animate-pulse">
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="h-5 w-5" 
+                            viewBox="0 0 20 20" 
+                            fill="currentColor"
+                          >
+                            <path 
+                              fillRule="evenodd" 
+                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" 
+                              clipRule="evenodd" 
+                            />
+                          </svg>
+                          <span>{errors[field.name]?.message}</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white py-3.5 rounded-lg 
+                      font-semibold text-lg tracking-wide uppercase 
+                      hover:bg-blue-700 
+                      focus:outline-none focus:ring-4 focus:ring-blue-300 
+                      transition-all duration-300 ease-in-out 
+                      transform hover:-translate-y-1 hover:scale-[1.02] 
+                      shadow-lg hover:shadow-xl"
+                  >
+                    Submit Performance Data
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <Button type="submit" className="w-full">
-            Submit
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 }
 

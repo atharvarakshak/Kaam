@@ -5,7 +5,8 @@ import {
   User, 
   Settings, 
   FileText, 
-  LogOut 
+  LogOut,
+  BarChart3
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -28,6 +29,12 @@ const Sidebar = () => {
       name: 'Admin Controls', 
       path: '/admin', 
       icon: Settings,
+      roles: ['admin']
+    },
+    { 
+      name: 'Performance Form', 
+      path: '/testing', 
+      icon: BarChart3,
       roles: ['admin']
     },
     { 

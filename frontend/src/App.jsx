@@ -17,7 +17,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/testing" element={<TestingPage />} />
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       <Route path="/verify-email" element={<VerifyEmailPage />} />
@@ -25,6 +24,7 @@ function App() {
 
       <Route element={<RoleProtectedRoute allowedRoles={["athlete"]} />}>
         <Route path="/athlete/dashboard" element={<AthleteDashboard />} />
+        <Route path="/testing" element={<TestingPage />} />
       </Route>
 
       <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
