@@ -4,7 +4,8 @@ import { validateFile } from '../utils/fileValidation';
 import axios from 'axios';
 import { Upload } from 'lucide-react';
 
-const API_BASE_URL = process.env.VITE_DRUG_TEST_API;
+
+const API_BASE_URL = "https://e083-2409-4081-dcb-7da7-320a-b946-1cd3-5cac.ngrok-free.app";
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
