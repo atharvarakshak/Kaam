@@ -121,6 +121,7 @@ function PerformanceForm() {
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to send data to the API. Please try again.");
+      setIsLoading(false);
     }
   };
 
