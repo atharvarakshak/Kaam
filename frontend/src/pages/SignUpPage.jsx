@@ -3,8 +3,6 @@ import { useLocation } from 'react-router-dom';
 
 const SignUpPage = () => {
   const location = useLocation();
-
-  // Determine role from navigation state
   const role = location.state?.role || 'default';
 
   return (
@@ -17,7 +15,8 @@ const SignUpPage = () => {
             }
           }}
           unsafeMetadata={{
-            role: role
+            role: role,
+            termsAccepted: false  
           }}
           forceRedirectUrl="/"
         />

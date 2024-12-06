@@ -8,7 +8,6 @@ import NewsSection from "../components/NewsSection"
 const HomePage = () => {
   return (
    <>
-     <Navbar />
      <HeroSection />
      <Body />
      <Chatbot/>
