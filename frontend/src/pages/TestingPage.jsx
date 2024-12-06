@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Sidebar from '../components/Sidebar'; 
-
+import { useState } from 'react';
 const schema = z.object({
   rank: z.number().positive('Rank must be a positive number'),
   mark: z.number().positive('Mark must be a positive number'),
@@ -17,8 +17,9 @@ const schema = z.object({
   pos: z.number().nullable(),
   venue: z.string().min(1, 'Venue is required'),
   date: z
-    .string()
-    .regex(/^\d{2}-[A-Za-z]{3}-\d{2}$/, 'Date must be in DD-MMM-YY format'),
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of Birth must be in YYYY-MM-DD format'),
+nationality: z.string().length(3, 'Nationality must be a 3-letter code'),
   resultsScore: z.number().nullable(),
   age: z.number().int().positive('Age must be a positive integer'),
   gender: z.enum(['Male', 'Female'], 'Gender must be Male or Female'),
@@ -37,15 +38,14 @@ function PerformanceForm() {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log('Form Data:', data);
-    alert('Form submitted successfully!');
-  };
-
+  const [apiResponse,setApiResponse] = useState(null);
+  const [isLoading,setIsLoading] = useState(false);
+  
   const formFields = [
     { name: 'rank', label: 'Rank', type: 'number' },
     { name: 'mark', label: 'Mark', type: 'number' },
@@ -55,7 +55,7 @@ function PerformanceForm() {
     { name: 'nationality', label: 'Nationality (3-letter code)', type: 'text' },
     { name: 'pos', label: 'Position', type: 'number' },
     { name: 'venue', label: 'Venue', type: 'text' },
-    { name: 'date', label: 'Date', type: 'text' },
+    { name: 'date', label: 'Date', type: 'date' },
     { name: 'resultsScore', label: 'Results Score', type: 'number' },
     { name: 'age', label: 'Age', type: 'number' },
     { name: 'gender', label: 'Gender', type: 'select', options: ['Male', 'Female'] },
@@ -69,12 +69,66 @@ function PerformanceForm() {
     { name: 'drugConsumption', label: 'Drug Consumption', type: 'select', options: ['Yes', 'No'] },
   ];
 
+  const onSubmit = async (data) => {
+    // Map form data to the required API format
+    setIsLoading(true);
+    const payload = {
+      features: [
+        data.rank,
+        data.mark,
+        data.wind,
+        data.pos,
+        data.resultsScore,
+        data.age,
+        data.gender === "Male" ? 1 : 0,
+        data.sprintDistance,
+        data.previousYearsMark ,
+        data.peakAcceleration ,
+        data.reactionTime ,
+        data.heartRateDuringPerformance ,
+        data.heartRateVariability ,
+        data.lactateThreshold ,
+        data.drugConsumption === "Yes" ? 1 : 0,
+      ],
+    };
+    console.log(payload)
+  
+    try {
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      
+  
+      const result = await response.json();
+      console.log("API Response:", result.prediction);
+      if(result.prediction==1){
+
+        setApiResponse("Doped");
+      }
+      else{
+
+        setApiResponse("Not Doped")
+      }
+      setIsLoading(false);
+      console.log(apiResponse);
+
+      
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to send data to the API. Please try again.");
+    }
+  };
+
+
   return (
     <div className="flex">
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
       <div className="flex-grow bg-gray-50 min-h-screen">
         <div className="container mx-auto px-4 py-8">
           <div className="w-full max-w-4xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden">
@@ -119,7 +173,17 @@ function PerformanceForm() {
                         <input
                           id={field.name}
                           type={field.type}
-                          {...register(field.name)}
+                          {...register(field.name, { 
+                            valueAsNumber: field.type === 'number', 
+                            required: field.name !== 'pos' && 
+                                     field.name !== 'resultsScore' && 
+                                     field.name !== 'previousYearsMark' &&
+                                     field.name !== 'peakAcceleration' &&
+                                     field.name !== 'reactionTime' &&
+                                     field.name !== 'heartRateDuringPerformance' &&
+                                     field.name !== 'heartRateVariability' &&
+                                     field.name !== 'lactateThreshold'
+                          })}
                           className={`w-full px-4 py-2.5 rounded-lg border-2 transition-all duration-300 ease-in-out focus:ring-2 focus:outline-none
                             ${errors[field.name] 
                               ? 'border-red-400 focus:ring-red-200 bg-red-50' 
@@ -159,10 +223,27 @@ function PerformanceForm() {
                       transform hover:-translate-y-1 hover:scale-[1.02] 
                       shadow-lg hover:shadow-xl"
                   >
-                    Submit Performance Data
+                    {!isLoading ? (
+                      <p>Submit Performance Data</p>
+                    ) : (
+                        <p className='animate-pulse'>...</p>
+                    )
+
+                    }
                   </button>
                 </div>
               </form>
+              {apiResponse && (
+                <div className="mt-8 p-6 bg-gray-100 rounded-lg shadow-md">
+                  <h2 className="text-lg font-semibold text-gray-700 mb-4">
+                    Prediction Result:
+                  </h2>
+                  <pre className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {JSON.stringify(apiResponse, null, 2)}
+                  </pre>
+                </div>
+              )}
+              
             </div>
           </div>
         </div>
