@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import backgroundImage from "../../public/assets/adr1.jpg";
-import { SlArrowDownCircle } from 'react-icons/sl'; 
+import { useState, useEffect } from "react";
+// import backgroundImage from "../../public/assets/adr1.jpg";
+const backgroundImage = "/assets/adr1.jpg";
+import { SlArrowDownCircle } from "react-icons/sl";
 
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,26 +16,26 @@ const HeroSection = () => {
   }, []);
 
   const scrollToAthleteTools = () => {
-    document.getElementById("athlete-tools").scrollIntoView({ 
+    document.getElementById("athlete-tools").scrollIntoView({
       behavior: "smooth",
-      block: "start" 
+      block: "start",
     });
   };
 
   const heroWords = [
     { word: "Integrity.", delay: "delay-100" },
     { word: "Transparency.", delay: "delay-300" },
-    { word: "Trust.", delay: "delay-500" }
+    { word: "Trust.", delay: "delay-500" },
   ];
 
   return (
     <section
       className="relative bg-cover bg-center bg-no-repeat h-screen flex items-center justify-center"
       style={{
-        backgroundImage: `url(${backgroundImage})`, 
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        backgroundAttachment: 'fixed', 
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
       {/* Overlay */}
@@ -45,14 +46,16 @@ const HeroSection = () => {
         {/* Animated Hero Words */}
         <div className="space-y-4 mb-6">
           {heroWords.map((item, index) => (
-            <h1 
+            <h1
               key={index}
               className={`
                 text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight 
                 transform transition-all duration-1000 ease-out
-                ${isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-10'}
+                ${
+                  isVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                }
                 ${item.delay}
               `}
             >
@@ -62,13 +65,15 @@ const HeroSection = () => {
         </div>
 
         {/* Tagline */}
-        <p 
+        <p
           className={`
             max-w-2xl mx-auto mb-8 text-lg md:text-xl text-gray-200
             transform transition-all duration-1000 ease-out
-            ${isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'}
+            ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }
             delay-700
           `}
         >
@@ -76,13 +81,15 @@ const HeroSection = () => {
         </p>
 
         {/* Call to Action Buttons */}
-        <div 
+        <div
           className={`
             flex justify-center space-x-4 mb-16
             transform transition-all duration-1000 ease-out
-            ${isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'}
+            ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }
             delay-1000
           `}
         >
@@ -123,13 +130,15 @@ const HeroSection = () => {
         </div>
 
         {/* Scroll Down Button */}
-        <div 
+        <div
           className={`
             flex justify-center
             transform transition-all duration-1000 ease-out
-            ${isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'}
+            ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }
             delay-[1200ms]
           `}
         >
