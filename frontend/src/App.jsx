@@ -19,6 +19,7 @@ import Navbar from "./components/Navbar";
 import TermsAndConditions from "./components/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import Search from "./pages/Search";
+import ReportPage from "./pages/ReportPage";
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/report" element={<ReportPage />} />
 
         <Route element={<RoleProtectedRoute allowedRoles={["athlete"]} />}>
           <Route path="/athlete/dashboard" element={<AthleteDashboard />} />
