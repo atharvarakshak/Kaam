@@ -18,6 +18,8 @@ import DrugTest from "./pages/DrugTest";
 import Navbar from "./components/Navbar";
 import TermsAndConditions from "./components/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
+import Search from "./pages/Search";
+
 
 function App() {
   const { user, isSignedIn } = useUser();
@@ -51,7 +53,7 @@ function App() {
         <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/testing" element={<TestingPage />} />
           <Route path="/drugtest" element={<DrugTest />} />
-          {/* <Route path="/resources" element={<Resources />} /> */}
+          <Route path="/search" element={<Search />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           {/* <Route path="/admin/testing" element={<Testing />} /> */}
         </Route>

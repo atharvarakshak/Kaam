@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 const Resources = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Navbar />
+     
 
       {/* Hero Section */}
       <div className="relative w-full h-80 bg-gray-800 text-white flex items-center justify-center overflow-hidden">
