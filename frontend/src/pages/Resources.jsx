@@ -11,7 +11,7 @@ const Resources = () => {
       {/* Hero Section */}
       <div className="relative w-full h-80 bg-gray-800 text-white flex items-center justify-center overflow-hidden">
         <img
-          src="/assets/NoDoping.jpg"
+          src="/assets/NoDopi .jpg"
           alt="No Doping"
           className="absolute inset-0 w-full h-full object-cover"
         />
