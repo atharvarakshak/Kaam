@@ -19,11 +19,8 @@ import Navbar from "./components/Navbar";
 import TermsAndConditions from "./components/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import Search from "./pages/Search";
-<<<<<<< HEAD
 import SearchResult from "./pages/SearchResult";
-=======
 import ReportPage from "./pages/ReportPage";
->>>>>>> a3dcfb44df60f9eb62309a1e89349f32b090b970
 
 
 function App() {
