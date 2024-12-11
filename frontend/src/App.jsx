@@ -19,6 +19,7 @@ import Navbar from "./components/Navbar";
 import TermsAndConditions from "./components/TermsAndConditions";
 import ContactPage from "./pages/ContactPage";
 import Search from "./pages/Search";
+import SearchResult from "./pages/SearchResult";
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
           <Route path="/testing" element={<TestingPage />} />
           <Route path="/drugtest" element={<DrugTest />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/search/:id" element={<SearchResult />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           {/* <Route path="/admin/testing" element={<Testing />} /> */}
         </Route>

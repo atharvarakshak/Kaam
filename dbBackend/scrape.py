@@ -59,13 +59,22 @@ headers = {
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": '"Linux"',
     "x-amz-user-agent": "aws-amplify/3.0.2",
-    "x-api-key": "da2-2xqo7n34jzcp5mnd45fu4uq56y"  # Replace <api-key> with the actual API key
+    "x-api-key": "da2-2xqo7n34jzcp5mnd45fu4uq56y"
 }
 
 # Make the POST request
 response = requests.post(url, json=payload, headers=headers)
 
-# Decode Brotli-encoded response
-print(response.text)
-data = json.loads(response.text)
-print(json.dumps(data, indent=2))
+# Print out more diagnostic information
+print("Status Code:", response.status_code)
+print("Response Headers:", response.headers)
+print("Response Content:", response.text)
+
+# Decode JSON only if content type is JSON
+try:
+    data = response.json()  # Safer way to parse JSON
+    print(json.dumps(data, indent=2))
+except json.JSONDecodeError as e:
+    print(f"JSON Decode Error: {e}")
+except Exception as e:
+    print(f"Unexpected error: {e}")
