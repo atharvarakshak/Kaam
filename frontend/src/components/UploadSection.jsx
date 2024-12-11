@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Upload } from 'lucide-react';
 
 
-const API_BASE_URL = "https://08fc-36-255-14-242.ngrok-free.app/";
+const API_BASE_URL = "https://a04a-103-225-13-3.ngrok-free.app";
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
