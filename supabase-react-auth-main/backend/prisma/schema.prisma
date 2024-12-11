@@ -10,67 +10,130 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Profile {
-  id                   Int                    @id @default(autoincrement())
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  username             String
-  website              String
-  company              String
-  authorEmail          String                 @unique
-  isPublic             Boolean                @default(false)
-  programmingLanguages ProgrammingLanguages[]
-  picture              Picture?
-  posts                Post[]
-  likes                Like[]
+// Prisma schema definition for roles and relationships in the project
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  role         Role     @default(USER)
+  reports      Report[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  Athlete Athlete[]
+
+  Investigator Investigator[]
+
+  Admin Admin[]
+
+  Moderator Moderator[]
 }
 
-model ProgrammingLanguages {
-  id        Int      @id @default(autoincrement())
-  language  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profileId Int
-  Profile   Profile  @relation(fields: [profileId], references: [id])
-
-  @@unique([language, id])
+model Moderator {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  flaggedAthletes AthleteFlag[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-model Post {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  title     String
-  content   String?
-  published Boolean   @default(false)
-  viewCount Int       @default(0)
-  profileId Int?
-  profile   Profile?  @relation(fields: [profileId], references: [id])
-  likes     Like[]
-  comments  Comment[]
+model Admin {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  assignedReports Report[]
+  testedReports   Report[] @relation("AdminTestedReports")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-model Like {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  postId    Int
-  Post      Post     @relation(fields: [postId], references: [id])
-  profileId Int
-  Profile   Profile  @relation(fields: [profileId], references: [id])
+model Investigator {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  anonymousReports Report[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-model Comment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  postId    Int
-  Post      Post     @relation(fields: [postId], references: [id])
+model Laboratory {
+  id           Int      @id @default(autoincrement())
+  name         String
+  location     String
+  testedReports Report[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  TestResult TestResult[]
 }
 
-model Picture {
-  id        Int      @id @default(autoincrement())
-  avatarUrl String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profileId Int      @unique
-  profile   Profile  @relation(fields: [profileId], references: [id])
+model Athlete {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  testResults  TestResult[]
+  isFlagged    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  AthleteFlag AthleteFlag[]
+
+  Report Report[]
+}
+
+model Report {
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  user         User?    @relation(fields: [userId], references: [id])
+  investigatorId Int?
+  investigator Investigator? @relation(fields: [investigatorId], references: [id])
+  adminId      Int?
+  admin        Admin?   @relation(fields: [adminId], references: [id])
+  laboratoryId Int?
+  laboratory   Laboratory? @relation(fields: [laboratoryId], references: [id])
+  athleteId    Int?
+  athlete      Athlete? @relation(fields: [athleteId], references: [id])
+  status       ReportStatus @default(PENDING)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  Admin Admin[] @relation("AdminTestedReports")
+}
+
+model TestResult {
+  id           Int      @id @default(autoincrement())
+  athleteId    Int
+  athlete      Athlete  @relation(fields: [athleteId], references: [id])
+  laboratoryId Int
+  laboratory   Laboratory @relation(fields: [laboratoryId], references: [id])
+  result       String
+  isDoped      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AthleteFlag {
+  id           Int      @id @default(autoincrement())
+  athleteId    Int
+  athlete      Athlete  @relation(fields: [athleteId], references: [id])
+  moderatorId  Int
+  moderator    Moderator @relation(fields: [moderatorId], references: [id])
+  reason       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+  INVESTIGATOR
+  ATHLETE
+}
+
+enum ReportStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FLAGGED
 }
