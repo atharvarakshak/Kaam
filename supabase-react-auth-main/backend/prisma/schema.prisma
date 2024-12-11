@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id                   Int                    @id @default(autoincrement())
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  username             String
+  website              String
+  company              String
+  authorEmail          String                 @unique
+  isPublic             Boolean                @default(false)
+  programmingLanguages ProgrammingLanguages[]
+  picture              Picture?
+  posts                Post[]
+  likes                Like[]
+}
+
+model ProgrammingLanguages {
+  id        Int      @id @default(autoincrement())
+  language  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profileId Int
+  Profile   Profile  @relation(fields: [profileId], references: [id])
+
+  @@unique([language, id])
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String
+  content   String?
+  published Boolean   @default(false)
+  viewCount Int       @default(0)
+  profileId Int?
+  profile   Profile?  @relation(fields: [profileId], references: [id])
+  likes     Like[]
+  comments  Comment[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  postId    Int
+  Post      Post     @relation(fields: [postId], references: [id])
+  profileId Int
+  Profile   Profile  @relation(fields: [profileId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  postId    Int
+  Post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Picture {
+  id        Int      @id @default(autoincrement())
+  avatarUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profileId Int      @unique
+  profile   Profile  @relation(fields: [profileId], references: [id])
+}

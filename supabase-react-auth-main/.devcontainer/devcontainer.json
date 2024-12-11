@@ -1,0 +1,54 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/typescript-node
+{
+	"name": "Node.js & TypeScript",
+	"dockerComposeFile": "docker-compose.yml",
+  	"service": "app",
+  	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"sqltools.connections": [
+			{
+			  "name": "Container database",
+			  "driver": "PostgreSQL",
+			  "previewLimit": 50,
+			  "server": "localhost",
+			  "port": 5432,
+			  "database": "supabase_react_auth_db",
+			  "username": "postgres",
+			  "password": "postgres"
+			}
+		],
+		"dotfiles.repository": "git@github.com:daniellaera/dotfiles.git",
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": false
+		},
+		"workbench.editor.titleScrollbarSizing": "large"
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"dbaeumer.vscode-eslint",
+		"mutantdino.resourcemonitor",
+		"eamodio.gitlens",
+		"wix.vscode-import-cost",
+		"esbenp.prettier-vscode",
+		"prisma.prisma",
+		"ms-azuretools.vscode-docker",
+		"cweijan.vscode-postgresql-client2",
+		"pkief.material-icon-theme"
+	],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [5432],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash .devcontainer/scripts/bootstrap.sh",
+	// "postStartCommand": "cd backend && npm run db:seed",
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "node",
+	"features": {
+		"powershell": "latest",
+		"ghcr.io/dhoeric/features/flyctl:1": {
+			"version": "latest"
+		}
+	}
+	// for more features https://containers.dev/features
+}
