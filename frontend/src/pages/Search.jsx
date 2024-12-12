@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AthleteCard from '../components/AthleteCard';
 
 const Search = () => {
   const [countries, setCountries] = useState([]); // State for countries
@@ -39,30 +40,38 @@ const Search = () => {
       alert('Please provide at least one search parameter');
       return;
     }
-
-    console.log("country: ",country);
-    console.log("name: ",name);
-    console.log("Gender: ",gender);
+  
+    console.log("country: ", country);
+    console.log("name: ", name);
+    console.log("Gender: ", gender);
     setLoading(true);
     setError(null);
     setResponse(null);
-
+  
     try {
-      const params = new URLSearchParams();
-      if (name) params.append('name', name);
-      if (country) params.append('country', country);
-      if (gender) params.append('gender', gender);
-
-      const apiUrl = `http://localhost:5000/search-competitors?${params.toString()}`;
-      const res = await fetch(apiUrl);
-
+      // Create the query object
+      const queryObject = {};
+      if (name) queryObject.query = name;
+      if (country) queryObject.country = country;
+      console.log(queryObject.country);
+      if (gender) queryObject.gender = gender;
+  
+      const apiUrl = `http://localhost:5000/search-competitors`;
+      const res = await fetch(apiUrl, {
+        method: 'POST', // Use POST instead of GET
+        headers: {
+          'Content-Type': 'application/json', // Specify JSON format
+        },
+        body: JSON.stringify( queryObject ), // Pass the query object in the body
+      });
+  
       if (!res.ok) {
         throw new Error('Failed to fetch data');
       }
-
+  
       const data = await res.json();
-      setResponse(data);
-      navigate(`/search/${data.id}`, { state: { jsonResponse: data } });
+      const athleteData = data["data"]["searchCompetitors"]
+      setResponse(athleteData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -120,12 +129,18 @@ const Search = () => {
         {loading && <p className="text-blue-500 text-center">Loading...</p>}
         {error && <p className="text-red-500 text-center">Error: {error}</p>}
         {response && (
-          <div className="mt-6">
-            <h2 className="text-lg font-bold mb-4">Results:</h2>
-            <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto">
-              {JSON.stringify(response, null, 2)}
-            </pre>
-          </div>
+        <div className="mt-6">
+          <h2 className="text-lg font-bold mb-4">Results:</h2>
+            <div className="flex flex-col items-center">
+              {response.length > 0 ? (
+                response.map((athlete) => (
+                  <AthleteCard key={response.aaAthleteId} athlete={athlete} />
+                ))
+              ) : (
+                <p className="text-gray-600 text-lg mt-4">No matches</p>
+              )}
+            </div>
+        </div>
         )}
       </div>
     </div>

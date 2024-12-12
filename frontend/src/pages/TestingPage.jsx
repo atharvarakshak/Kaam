@@ -1,12 +1,12 @@
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Sidebar from "../components/Sidebar";
 import { useState } from "react";
+
 const schema = z.object({
-  rank: z.number().positive("Rank must be a positive number"),
-  mark: z.number().positive("Mark must be a positive number"),
+  rank: z.number().nonnegative("Rank must be a non-negative number"),
+  mark: z.number().nonnegative("Mark must be a non-negative number"),
   wind: z.number(),
   competitor: z.string().min(1, "Competitor name is required"),
   dob: z
@@ -17,12 +17,11 @@ const schema = z.object({
   venue: z.string().min(1, "Venue is required"),
   date: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of Birth must be in YYYY-MM-DD format"),
-  // nationality: z.string().length(3, "Nationality must be a 3-letter code"),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
   resultsScore: z.number().nullable(),
-  age: z.number().int().positive("Age must be a positive integer"),
+  age: z.number().nonnegative("Age must be a non-negative number"),
   gender: z.enum(["Male", "Female"], "Gender must be Male or Female"),
-  sprintDistance: z.number().positive("Sprint Distance must be positive"),
+  sprintDistance: z.number().nonnegative("Sprint Distance must be non-negative"),
   previousYearsMark: z.number().nullable(),
   peakAcceleration: z.number().nullable(),
   reactionTime: z.number().nullable(),
@@ -40,44 +39,56 @@ function PerformanceForm() {
     reset,
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      pos: null,
+      resultsScore: null,
+      previousYearsMark: null,
+      peakAcceleration: null,
+      reactionTime: null,
+      heartRateDuringPerformance: null,
+      heartRateVariability: null,
+      lactateThreshold: null,
+    },
   });
 
   const [apiResponse, setApiResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const formFields = [
-    { name: "rank", label: "Rank", type: "number" },
-    { name: "mark", label: "Mark", type: "number" },
-    { name: "wind", label: "Wind", type: "number" },
+    { name: "rank", label: "Rank", type: "number", step: "0.01" },
+    { name: "mark", label: "Mark", type: "number", step: "0.01" },
+    { name: "wind", label: "Wind", type: "number", step: "0.01" },
     { name: "competitor", label: "Competitor", type: "text" },
     { name: "dob", label: "Date of Birth", type: "date" },
     { name: "nationality", label: "Nationality (3-letter code)", type: "text" },
-    { name: "pos", label: "Position", type: "number" },
+    { name: "pos", label: "Position", type: "number", step: "0.01" },
     { name: "venue", label: "Venue", type: "text" },
     { name: "date", label: "Date", type: "date" },
-    { name: "resultsScore", label: "Results Score", type: "number" },
-    { name: "age", label: "Age", type: "number" },
+    { name: "resultsScore", label: "Results Score", type: "number", step: "0.01" },
+    { name: "age", label: "Age", type: "number", step: "0.01" },
     {
       name: "gender",
       label: "Gender",
       type: "select",
       options: ["Male", "Female"],
     },
-    { name: "sprintDistance", label: "Sprint Distance", type: "number" },
+    { name: "sprintDistance", label: "Sprint Distance", type: "number", step: "0.01" },
     {
       name: "previousYearsMark",
       label: "Previous Year's Mark",
-      type: "number",
+      type: "number", 
+      step: "0.01"
     },
-    { name: "peakAcceleration", label: "Peak Acceleration", type: "number" },
-    { name: "reactionTime", label: "Reaction Time", type: "number" },
-    { name: "heartRateDuringPerformance", label: "Heart Rate", type: "number" },
+    { name: "peakAcceleration", label: "Peak Acceleration", type: "number", step: "0.01" },
+    { name: "reactionTime", label: "Reaction Time", type: "number", step: "0.01" },
+    { name: "heartRateDuringPerformance", label: "Heart Rate", type: "number", step: "0.01" },
     {
       name: "heartRateVariability",
       label: "Heart Rate Variability",
-      type: "number",
+      type: "number", 
+      step: "0.01"
     },
-    { name: "lactateThreshold", label: "Lactate Threshold", type: "number" },
+    { name: "lactateThreshold", label: "Lactate Threshold", type: "number", step: "0.01" },
     {
       name: "drugConsumption",
       label: "Drug Consumption",
@@ -94,17 +105,17 @@ function PerformanceForm() {
         data.rank,
         data.mark,
         data.wind,
-        data.pos,
-        data.resultsScore,
+        data.pos ?? 0,
+        data.resultsScore ?? 0,
         data.age,
         data.gender === "Male" ? 1 : 0,
         data.sprintDistance,
-        data.previousYearsMark,
-        data.peakAcceleration,
-        data.reactionTime,
-        data.heartRateDuringPerformance,
-        data.heartRateVariability,
-        data.lactateThreshold,
+        data.previousYearsMark ?? 0,
+        data.peakAcceleration ?? 0,
+        data.reactionTime ?? 0,
+        data.heartRateDuringPerformance ?? 0,
+        data.heartRateVariability ?? 0,
+        data.lactateThreshold ?? 0,
         data.drugConsumption === "Yes" ? 1 : 0,
       ],
     };
@@ -118,7 +129,7 @@ function PerformanceForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(payload),  
         }
       );
 
@@ -187,6 +198,7 @@ function PerformanceForm() {
                         <input
                           id={field.name}
                           type={field.type}
+                          step={field.step || "1"}
                           {...register(field.name, {
                             valueAsNumber: field.type === "number",
                             required:
@@ -265,4 +277,4 @@ function PerformanceForm() {
   );
 }
 
-export default PerformanceForm;
+export default PerformanceForm; 

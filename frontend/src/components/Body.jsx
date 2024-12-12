@@ -13,8 +13,8 @@ const Body = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Tool Links */}
             {[
-              { label: "Check Your Medications", icon: "📋", path: "/check-medications" },
-              { label: "Sample Collection Process", icon: "🧪", path: "/sample-collection" },
+              { label: "Resources", icon: "📋", path: "/resources" },
+              { label: "Testing", icon: "🧪", path: "/testing" },
               { label: "Whereabouts", icon: "🧭", path: "/whereabouts" },
               { label: "Therapeutic Use Exemptions", icon: "🩺", path: "/therapeutic-use" },
               { label: "Supplement Connect", icon: "💊", path: "/supplement-connect" },

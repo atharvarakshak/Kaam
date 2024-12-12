@@ -21,6 +21,7 @@ import ContactPage from "./pages/ContactPage";
 import Search from "./pages/Search";
 import SearchResult from "./pages/SearchResult";
 import ReportPage from "./pages/ReportPage";
+// import Create from "./pages/Create"
 
 
 function App() {
@@ -55,11 +56,12 @@ function App() {
 
         <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/testing" element={<TestingPage />} />
-          <Route path="/drugtest" element={<DrugTest />} />
+          {/* <Route path="/admin/dashboard/create" element={<Create />} /> */}
+         <Route path="/drugtest" element={<DrugTest />} />
           <Route path="/search" element={<Search />} />
           <Route path="/search/:id" element={<SearchResult />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          {/* <Route path="/admin/testing" element={<Testing />} /> */}
+          <Route path="/admin/testing" element={<Testing />} />
         </Route>
       </Routes>
     </>
